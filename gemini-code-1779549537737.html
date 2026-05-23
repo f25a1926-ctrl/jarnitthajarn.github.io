@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFP Matrix: Calculus in Food Processing & Fermentation Rates</title>
+    <!-- Chart.js CDN via UMD fallback to prevent rendering blocking or cross-origin failures on GitHub Pages -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-teal: #00796b;
+            --light-bg: #e0f2f1;
+            --accent-orange: #e65100;
+            --dark-text: #263238;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: var(--dark-text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .app-container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        }
+        .header-section {
+            border-bottom: 3px solid var(--light-bg);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .header-section h1 {
+            color: var(--primary-teal);
+            margin: 0 0 10px 0;
+            font-size: 1.85rem;
+        }
+        .badge {
+            background-color: var(--primary-teal);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .formula-box {
+            background-color: var(--light-bg);
+            border-left: 6px solid var(--primary-teal);
+            padding: 18px;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+        .chart-box {
+            position: relative;
+            height: 420px;
+            width: 100%;
+            margin: 30px 0;
+        }
+        .click-prompt {
+            background-color: #fff3e0;
+            border: 1px dashed var(--accent-orange);
+            color: #b75100;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .dashboard-output {
+            background: #fafafa;
+            border: 2px solid #eeeff0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 25px;
+            display: none;
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .output-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .data-card {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border-top: 4px solid var(--primary-teal);
+        }
+        .data-card.derivative {
+            border-top: 4px solid var(--accent-orange);
+        }
+        .card-label {
+            font-size: 0.85rem;
+            color: #78909c;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .card-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--dark-text);
+            margin-top: 5px;
+        }
+        .rate-highlight {
+            color: var(--accent-orange);
+        }
+        .explanation-text {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #64b5f6;
+            font-size: 1rem;
+        }
+        footer {
+            margin-top: 45px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.8rem;
+            color: #90a4ae;
+            text-align: center;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header-section">
+        <span class="badge">SFP: Agro Product Technology Module</span>
+        <h1>Bio-Processing Kinetics: Probiotic Fermentation Rates</h1>
+        <p><strong>Industrial Application:</strong> Processing optimization of functional dragon fruit juices. To scale manufacturing across food industries in Malaysia, product technologists utilize calculus to identify the <strong>maximum growth acceleration velocity</strong>. This pinpoints the transition window between microbial biomass creation and optimal organic acid expression.</p>
+    </div>
+
+    <div class="formula-box">
+        <strong>Biomass Concentration Function f(t):</strong><br>
+        X(t) = -0.0003t³ + 0.018t² + 0.05t + 0.5 &nbsp;&nbsp;(g/L)<br><br>
+        <strong>Instantaneous Kinetic Rate f'(t) [First Derivative]:</strong><br>
+        X'(t) = dX/dt = -0.0009t² + 0.036t + 0.05 &nbsp;&nbsp;(g/L per Hour)
+    </div>
+
+    <div class="click-prompt">
+        🔬 INTERACTIVE INTERFACE: Click directly on any node along the curve below to isolate that fermentation hour and compute its exact derivative!
+    </div>
+
+    <div class="chart-box">
+        <canvas id="fermentationChart"></canvas>
+    </div>
+
+    <div id="dashboardOutput" class="dashboard-output">
+        <div class="output-grid">
+            <div class="data-card">
+                <div class="card-label">Fermentation Timeline</div>
+                <div class="card-value" id="outHour">Hour 0</div>
+            </div>
+            <div class="data-card">
+                <div class="card-label">Biomass Density f(t)</div>
+                <div class="card-value" id="outBiomass">0.50 g/L</div>
+            </div>
+            <div class="data-card derivative">
+                <div class="card-label">Processing Growth Rate f'(t)</div>
+                <div class="card-value rate-highlight" id="outRate">0.050 g/L/hr</div>
+            </div>
+        </div>
+        <div class="explanation-text">
+            <strong>SFP Plant Operator Directive:</strong> <span id="outExplain">Select a timeline marker to run calculus analytics.</span>
+        </div>
+    </div>
+
+    <footer>
+        <p>Kinetic modeling parameters scaled from MARDI Food Technology Division & Malaysian Journal of Microbiology data protocols.</p>
+        <p>Agro-Product Calculus Analytical Tool | Software Interface Context 2026</p>
+    </footer>
+</div>
+
+<script>
+    // Safe initialization wrapper to ensure Chart.js library has loaded before execution
+    window.addEventListener('DOMContentLoaded', () => {
+        
+        // Generating data array for 48 hours of evaluation
+        const hours = [];
+        const biomassData = [];
+
+        for (let t = 0; t <= 48; t++) {
+            hours.push(t);
+            // f(t) = -0.0003t^3 + 0.018t^2 + 0.05t + 0.5
+            const currentDensity = (-0.0003 * Math.pow(t, 3)) + (0.018 * Math.pow(t, 2)) + (0.05 * t) + 0.5;
+            biomassData.push(currentDensity.toFixed(3));
+        }
+
+        // Mathematical implementation of the derivative f'(t)
+        function getInstantaneousRate(t) {
+            // f'(t) = -0.0009t^2 + 0.036t + 0.05
+            return (-0.0009 * Math.pow(t, 2)) + (0.036 * t) + 0.05;
+        }
+
+        // Configuration setup for Chart.js
+        const canvasContext = document.getElementById('fermentationChart').getContext('2d');
+        const fermentationChart = new Chart(canvasContext, {
+            type: 'line',
+            data: {
+                labels: hours,
+                datasets: [{
+                    label: 'Probiotic Biomass Concentration (g/L)',
+                    data: biomassData,
+                    borderColor: '#00796b',
+                    backgroundColor: 'rgba(0, 121, 107, 0.06)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#00796b',
+                    pointHoverBackgroundColor: '#e65100',
+                    pointHoverBorderColor: '#e65100',
+                    pointRadius: 3,
+                    pointHoverRadius: 7,
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Fermentation Run-Time (Hours)', font: { weight: 'bold', size: 13 } }
+                    },
+                    y: {
+                        title: { display: true, text: 'Biomass Concentration X(t) [g/L]', font: { weight: 'bold', size: 13 } },
+                        min: 0,
+                        max: 16
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                },
+                // Intercept clicks safely along the graph path canvas using Chart.js API mechanics
+                onClick: (event) => {
+                    const activeElements = fermentationChart.getElementsAtEventForMode(event, 'nearest', { intersect: false }, true);
+                    if (activeElements.length > 0) {
+                        const targetIndex = activeElements[0].index;
+                        const selectedHour = hours[targetIndex];
+                        const selectedBiomass = biomassData[targetIndex];
+                        const calculatedRate = getInstantaneousRate(selectedHour);
+                        
+                        updateProductDashboard(selectedHour, selectedBiomass, calculatedRate);
+                    }
+                }
+            }
+        });
+
+        // Dynamic element rendering engine for outputs and technical text interpretations
+        function updateProductDashboard(hour, biomass, rate) {
+            document.getElementById('outHour').innerText = `Hour ${hour}`;
+            document.getElementById('outBiomass').innerText = `${biomass} g/L`;
+            document.getElementById('outRate').innerText = `+${rate.toFixed(3)} g/L/hr`;
+
+            let assessment = "";
+
+            if (hour >= 0 && hour <= 8) {
+                assessment = "LAG PHASE: The bacteria/yeast are adapting to the dragon fruit sugars. The derivative is extremely low because cells are synthesizing enzymes rather than multiplying. Do not disturb the bioreactor vat jacket temperature.";
+            } else if (hour > 8 && hour <= 24) {
+                assessment = "LOG/EXPONENTIAL PHASE: The derivative is peaking! At hour 20, the processing system hits maximum conversion velocity. The micro-organisms are consuming sugars and spitting out beneficial metabolic by-products at top speed. Perfect time to monitor gas release valves.";
+            } else if (hour > 24 && hour <= 38) {
+                assessment = "DECELERATION PHASE: The derivative is dropping significantly. The concentration is still high, but the *rate of adding new mass* is slowing down because nutrients are starting to deplete and acid conditions are building up.";
+            } else {
+                assessment = "STATIONARY/PLATEAU PHASE: The derivative flatlines close to 0.000. New cells are dying at the exact same rate they are born. Pull the product out of the tanks NOW for filtration and blending. Waiting longer leads to a negative derivative (death phase), destroying batch taste!";
+            }
+
+            document.getElementById('outExplain').innerText = assessment;
+            document.getElementById('dashboardOutput').style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>
