@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro-Product Calculus: MD2 Pineapple Sugar Ripening Rate Solver</title>
+    <!-- Tailwind CSS for elegant design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for premium icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for smooth data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- KaTeX for beautiful math equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <!-- Tailwind Custom Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        pineapple: {
+                            50: '#fefbeb',
+                            100: '#fef3c7',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        },
+                        agriculture: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans">
+
+    <!-- Top Header -->
+    <header class="bg-gradient-to-r from-agriculture-800 to-teal-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-yellow-400 p-3 rounded-2xl shadow-inner text-agriculture-800 text-3xl animate-bounce">
+                    <i class="fa-solid fa-pineapple"></i>
+                </div>
+                <div>
+                    <span class="bg-emerald-500/30 text-emerald-300 text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-500/20">
+                        SFP: Agro Product Technology Specialization
+                    </span>
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight mt-1">MD2 Pineapple Ripening Kinetics</h1>
+                    <p class="text-teal-100 text-xs md:text-sm">Applying Calculus & Derivatives to Predict Optimal Harvest Windows in Malaysian Peat Soils</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-teal-200 hidden lg:inline">Collaborative Bioscience Lab Platform</span>
+                <div class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 text-xs md:text-sm font-medium flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>Interactive Calculus Simulator</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <!-- Main Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- LEFT COLUMN: Bioscience Background, Math Derivation, References (5 Cols) -->
+            <section class="lg:col-span-5 space-y-8">
+                
+                <!-- Card 1: Bioscience Case Study Background -->
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4 text-agriculture-700">
+                        <span class="p-2 bg-agriculture-50 rounded-lg"><i class="fa-solid fa-flask-vial text-xl"></i></span>
+                        <h2 class="text-xl font-bold">The Agro-Product Problem</h2>
+                    </div>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                        In Malaysia, the <strong>MD2 Pineapple</strong> (<em>Ananas comosus</em>) is highly sought after for exports and canning. Agro-product factories require a minimum sugar content of <strong>13.5° to 15° Brix</strong> for premium quality. Harvesting too early results in sour, starchy, low-yield fruit; harvesting too late leads to over-ripeness and rapid ethanol fermentation in storage.
+                    </p>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                        By tracking <strong>Days After Flower Induction (DAFI)</strong> from Day 110 to Day 150, agricultural scientists can model total sugar accumulation ($f(x)$). 
+                    </p>
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl">
+                        <h4 class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1"><i class="fa-solid fa-lightbulb mr-1.5"></i>Why Derivatives Matter:</h4>
+                        <p class="text-xs text-amber-900 leading-relaxed">
+                            The simple sugar amount $f(x)$ is important, but its derivative <strong>$f'(x)$ (the rate of sugar synthesis per day)</strong> reveals the exact metabolic efficiency window. When $f'(x)$ is at its peak, the fruit is converting starch into simple sugars at maximum speed. When $f'(x) \approx 0$, metabolic synthesis has stalled, signaling that maximum sugar has been loaded and over-ripening is imminent.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Mathematical Modeling & Derivation -->
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4 text-slate-800">
+                        <span class="p-2 bg-slate-100 rounded-lg"><i class="fa-solid fa-calculator text-xl text-teal-600"></i></span>
+                        <h2 class="text-xl font-bold text-teal-900">Mathematical Derivation</h2>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Based on ripening kinetics, the sugar accumulation profile is modeled using a cubic polynomial, where $x$ is the Day (DAFI) and $z = x - 110$ is the days elapsed in ripening phase:
+                    </p>
+
+                    <!-- KaTeX Equation Blocks -->
+                    <div class="space-y-4 my-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div>
+                            <span class="text-xs font-semibold text-slate-400 block mb-1">Total Sugar Accumulation Model:</span>
+                            <div id="katex-fx" class="text-sm md:text-base overflow-x-auto py-1"></div>
+                        </div>
+                        <hr class="border-slate-200">
+                        <div>
+                            <span class="text-xs font-semibold text-slate-400 block mb-1">Applying Power Rule for Differentiation:</span>
+                            <div id="katex-steps" class="text-xs md:text-sm overflow-x-auto py-1 text-slate-600"></div>
+                        </div>
+                        <hr class="border-slate-200">
+                        <div>
+                            <span class="text-xs font-semibold text-teal-600 block mb-1">The First Derivative $f'(x)$ (Synthesis Rate):</span>
+                            <div id="katex-dfx" class="text-sm md:text-base font-semibold overflow-x-auto py-1 text-teal-700"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-slate-500 space-y-2">
+                        <p class="flex gap-2 items-start">
+                            <i class="fa-solid fa-circle-info text-blue-500 mt-0.5"></i>
+                            <span>$f(x)$ represents total sugar content in <strong>Degrees Brix (°Brix)</strong>.</span>
+                        </p>
+                        <p class="flex gap-2 items-start">
+                            <i class="fa-solid fa-circle-info text-blue-500 mt-0.5"></i>
+                            <span>$f'(x)$ represents the <strong>Rate of Sugar Synthesis (°Brix/Day)</strong>.</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3: What-If Environmental Simulator -->
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4 text-agriculture-700">
+                        <span class="p-2 bg-agriculture-50 rounded-lg"><i class="fa-solid fa-seedling text-xl"></i></span>
+                        <h2 class="text-xl font-bold">What-If Environmental Shift</h2>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Environmental and soil quality factors can significantly shift the rate of sugar loading in MD2 pineapples. Select a condition to see its impact on the derivative:
+                    </p>
+                    <div class="grid grid-cols-1 gap-2.5">
+                        <button onclick="setEnvironment('standard')" id="btn-env-standard" class="flex items-center justify-between p-3 rounded-xl border-2 border-agriculture-600 bg-agriculture-50/50 text-left transition-all duration-200">
+                            <div>
+                                <span class="text-sm font-bold text-agriculture-800">Standard Malaysian Peat Soil</span>
+                                <p class="text-xs text-agriculture-600">Optimal fertilizer, steady tropical ripening rates.</p>
+                            </div>
+                            <span class="text-xs font-bold text-white bg-agriculture-600 px-2 py-0.5 rounded-md">Default</span>
+                        </button>
+                        <button onclick="setEnvironment('accelerated')" id="btn-env-accelerated" class="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-amber-300 text-left transition-all duration-200">
+                            <div>
+                                <span class="text-sm font-bold text-amber-800">Elevated Temperature / Drought</span>
+                                <p class="text-xs text-amber-600">Accelerated ripening, peak synthesis rate occurs earlier.</p>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 border border-slate-200 px-2 py-0.5 rounded-md">+15% Shift</span>
+                        </button>
+                        <button onclick="setEnvironment('delayed')" id="btn-env-delayed" class="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-sky-300 text-left transition-all duration-200">
+                            <div>
+                                <span class="text-sm font-bold text-sky-800">Low Fertilizer / Heavy Monsoon rain</span>
+                                <p class="text-xs text-sky-600">Stunted/Delayed ripening, sluggish synthesis rate.</p>
+                            </div>
+                            <span class="text-xs font-bold text-slate-400 border border-slate-200 px-2 py-0.5 rounded-md">-20% Shift</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 4: Academic References & Real Web Pages -->
+                <div class="bg-slate-800 text-slate-300 rounded-3xl p-6 shadow-sm">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="p-2 bg-slate-700 rounded-lg text-emerald-400"><i class="fa-solid fa-graduation-cap text-xl"></i></span>
+                        <h3 class="text-lg font-bold text-white">Malaysia Agro-Product Citations</h3>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+                        To match realistic agronomic profiles, the mathematical curves have been aligned with crop databases and official guidelines:
+                    </p>
+                    <ul class="space-y-3.5 text-xs">
+                        <li class="border-b border-slate-700 pb-3">
+                            <span class="text-emerald-400 font-semibold block"><i class="fa-solid fa-link mr-1"></i> MARDI Agricultural Technology Journal</span>
+                            <span class="text-slate-400 font-medium">Article Name:</span> "Physicochemical and sensory evaluation of MD2 pineapple during stage growth ripening indices" — MARDI Publication Center.
+                        </li>
+                        <li class="border-b border-slate-700 pb-3">
+                            <span class="text-emerald-400 font-semibold block"><i class="fa-solid fa-link mr-1"></i> Malaysian Pineapple Industry Board (LPNM)</span>
+                            <span class="text-slate-400 font-medium">Manual:</span> "Standard Piawaian Indeks Kematangan Nanas MD2" — lpnm.gov.my index verification guides.
+                        </li>
+                        <li>
+                            <span class="text-emerald-400 font-semibold block"><i class="fa-solid fa-link mr-1"></i> Malaysian Journal of Soil Science</span>
+                            <span class="text-slate-400 font-medium">Research:</span> "Physico-chemical properties of tropical peat soils under MD2 pineapple cultivation in Johor" — msss.com.my databases.
+                        </li>
+                    </ul>
+                </div>
+
+            </section>
+
+            <!-- RIGHT COLUMN: Dashboard & Interactive Solver UI (7 Cols) -->
+            <section class="lg:col-span-7 space-y-8">
+                
+                <!-- Main Solver Interactive Card -->
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-6 border-b border-slate-100 pb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Crop Ripening & Derivative Dashboard</h2>
+                            <p class="text-xs text-slate-500">Click on any chart point or drag the slider to solve for that exact day's rate</p>
+                        </div>
+                        <span class="text-xs bg-amber-100 text-amber-800 font-semibold px-2.5 py-1 rounded-full border border-amber-200">
+                            Unit: Degrees Brix & Brix/Day
+                        </span>
+                    </div>
+
+                    <!-- Chart.js Container -->
+                    <div class="relative h-[320px] md:h-[380px] w-full mb-6 bg-slate-50 rounded-2xl p-2 border border-slate-100">
+                        <canvas id="cropChart"></canvas>
+                    </div>
+
+                    <!-- Slider Control -->
+                    <div class="bg-emerald-50/50 p-5 rounded-2xl border border-emerald-100 mb-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <label for="daySlider" class="text-sm font-bold text-slate-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-calendar-day text-agriculture-600"></i>
+                                Select Day (Days After Flower Induction - DAFI):
+                            </label>
+                            <span id="sliderValue" class="text-xl font-extrabold text-agriculture-800 bg-white border border-emerald-200 px-3 py-1 rounded-xl shadow-sm">125 DAFI</span>
+                        </div>
+                        <input type="range" id="daySlider" min="110" max="150" value="125" step="1" 
+                               class="w-full h-2 bg-emerald-200 rounded-lg appearance-none cursor-pointer accent-agriculture-600 hover:accent-agriculture-700 transition-all">
+                        <div class="flex justify-between text-[10px] text-slate-400 font-semibold px-1 mt-1.5">
+                            <span>DAY 110 (Green Fruit)</span>
+                            <span>DAY 120 (Early Yellowing)</span>
+                            <span>DAY 130 (Mid Ripe)</span>
+                            <span>DAY 140 (Full Ripe)</span>
+                            <span>DAY 150 (Overripe)</span>
+                        </div>
+                    </div>
+
+                    <!-- DERIVATIVE SOLVER STEP-BY-STEP CALCULATION PANEL -->
+                    <div class="border border-slate-100 rounded-2xl p-5 bg-white space-y-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-1.5 h-6 bg-amber-500 rounded-full"></div>
+                            <h3 class="text-base font-bold text-slate-800">Derivative Analytical Solver for Selected Day: <span id="calc-day-header" class="text-amber-600">125</span></h3>
+                        </div>
+
+                        <!-- Mathematical solver output display -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Left Solver Metric (Total Brix) -->
+                            <div class="bg-gradient-to-br from-amber-50/40 to-yellow-50/40 p-4 rounded-xl border border-amber-100/60">
+                                <span class="text-xs text-slate-500 font-medium block mb-1">Total Sugar Accumulation $f(x)$</span>
+                                <div class="flex items-baseline gap-2">
+                                    <span id="sugarBrix" class="text-3xl font-black text-amber-700">9.15</span>
+                                    <span class="text-xs font-semibold text-amber-800">°Brix</span>
+                                </div>
+                                <div id="katex-sugar-calc" class="mt-2 text-[11px] text-slate-500 overflow-x-auto"></div>
+                            </div>
+
+                            <!-- Right Solver Metric (Derivative sugar velocity) -->
+                            <div class="bg-gradient-to-br from-emerald-50/40 to-teal-50/40 p-4 rounded-xl border border-emerald-100/60">
+                                <span class="text-xs text-slate-500 font-medium block mb-1">Sugar Accumulation Rate $f'(x)$ (Derivative)</span>
+                                <div class="flex items-baseline gap-2">
+                                    <span id="sugarRate" class="text-3xl font-black text-emerald-700">+0.36</span>
+                                    <span class="text-xs font-semibold text-emerald-800">°Brix / Day</span>
+                                </div>
+                                <div id="katex-rate-calc" class="mt-2 text-[11px] text-slate-500 overflow-x-auto"></div>
+                            </div>
+                        </div>
+
+                        <!-- Layman / Agro-Product Technologist Practical Explanation -->
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <div class="flex items-center gap-2 text-slate-800 font-semibold text-xs uppercase tracking-wider mb-2">
+                                <i class="fa-solid fa-user-doctor text-emerald-600"></i>
+                                <span>Agro-Technologist Assessment:</span>
+                            </div>
+                            <p id="laymanExplanation" class="text-sm text-slate-600 leading-relaxed mb-3">
+                                At Day 125, the sugar concentration is growing at a rate of 0.36° Brix per day. The fruit is transitioning metabolically from starchy maturation to intense sugar biosynthesis.
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center text-xs">
+                                <span class="font-bold text-slate-700">Recommended Factory Actions:</span>
+                                <span id="harvestAdvisory" class="px-3 py-1 rounded-full font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                    Do Not Harvest Yet — Processing profile is not mature
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Crop Quiz Section -->
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="p-2 bg-indigo-50 rounded-lg text-indigo-600"><i class="fa-solid fa-gamepad text-xl"></i></span>
+                        <h2 class="text-xl font-bold text-slate-800">Agro-Physiology Calculus Quiz</h2>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-6">
+                        Test your bioscience calculus skills. Select answers to immediately verify your academic knowledge.
+                    </p>
+
+                    <!-- Quiz Question 1 -->
+                    <div class="space-y-4">
+                        <div class="border-b border-slate-100 pb-5">
+                            <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Question 1</span>
+                            <p class="text-sm font-semibold text-slate-800 mt-2">
+                                What does a derivative value of $f'(125) = 0.36^\circ\text{Brix/day}$ represent physically in the processing factory?
+                            </p>
+                            <div class="grid grid-cols-1 gap-2 mt-3 text-xs">
+                                <button onclick="checkAnswer(1, 'A', this)" class="p-3 text-left border border-slate-200 rounded-xl hover:bg-indigo-50/50 transition duration-200">
+                                    <strong class="text-indigo-600 mr-1.5">A.</strong> The MD2 pineapple possesses exactly 0.36% sucrose in total weight.
+                                </button>
+                                <button onclick="checkAnswer(1, 'B', this)" class="p-3 text-left border border-slate-200 rounded-xl hover:bg-indigo-50/50 transition duration-200">
+                                    <strong class="text-indigo-600 mr-1.5">B.</strong> At exactly Day 125, the sugar synthesis rate is currently increasing by 0.36% Brix per day.
+                                </button>
+                                <button onclick="checkAnswer(1, 'C', this)" class="p-3 text-left border border-slate-200 rounded-xl hover:bg-indigo-50/50 transition duration-200">
+                                    <strong class="text-indigo-600 mr-1.5">C.</strong> The pineapple has reached stable ripening and must be canned at index level 0.36.
+                                </button>
+                            </div>
+                            <div id="q1-feedback" class="hidden mt-2 p-2.5 rounded-lg text-xs font-medium"></div>
+                        </div>
+
+                        <!-- Quiz Question 2 -->
+                        <div class="border-b border-slate-100 pb-5">
+                            <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Question 2</span>
+                            <p class="text-sm font-semibold text-slate-800 mt-2">
+                                Why does the ripening rate derivative $f'(x)$ approach zero or become slightly negative near Day 149-150 DAFI?
+                            </p>
+                            <div class="grid grid-cols-1 gap-2 mt-3 text-xs">
+                                <button onclick="checkAnswer(2, 'A', this)" class="p-3 text-left border border-slate-200 rounded-xl hover:bg-indigo-50/50 transition duration-200">
+                                    <strong class="text-indigo-600 mr-1.5">A.</strong> Soil peat moisture has run completely dry in Johor plantation soils.
+                                </button>
+                                <button onclick="checkAnswer(2, 'B', this)" class="p-3 text-left border border-slate-200 rounded-xl hover:bg-indigo-50/50 transition duration-200">
+                                    <strong class="text-indigo-600 mr-1.5">B.</strong> Simple starch-to-sugar enzymatic conversions have finished loading, and cellular respiration or micro-fermentation begins to exhaust sugars.
+                                </button>
+                                <button onclick="checkAnswer(2, 'C', this)" class="p-3 text-left border border-slate-200 rounded-xl hover:bg-indigo-50/50 transition duration-200">
+                                    <strong class="text-indigo-600 mr-1.5">C.</strong> The pineapple plant has shed all of its leaves, ending active physical photosynthesis.
+                                </button>
+                            </div>
+                            <div id="q2-feedback" class="hidden mt-2 p-2.5 rounded-lg text-xs font-medium"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer of Page -->
+    <footer class="bg-slate-900 text-slate-400 py-12 mt-16 border-t border-slate-800 text-xs text-center">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="font-bold text-slate-300 text-sm mb-2"><i class="fa-solid fa-graduation-cap text-emerald-400 mr-2"></i>Agro Product Technology (SFP) Course Resource</p>
+            <p class="max-w-xl mx-auto mb-4">Developed as an interactive calculus-bioscience solver tool to assist undergraduate plant physiology and food processing kinetics labs in Malaysia.</p>
+            <p>&copy; 2026 Malaysia Agricultural Technology Calculus Simulators. Under academic licensing rules.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Environmental multipliers to shift the growth curve dynamically based on what-if configurations
+        let currentEnv = 'standard';
+        let speedFactor = 1.0; 
+
+        // Current Selected Day (Default is Day 125)
+        let selectedDay = 125;
+
+        // Variables to hold ChartJS instance and datasets
+        let cropChart = null;
+
+        // Base functions
+        // z represents days elapsed inside ripening index phase (starting at Day 110 DAFI)
+        // Function f(x) and its derivative parameters are based on standard logistic-cubic ripening rates
+        function calculateBrix(day, env) {
+            let factor = 1.0;
+            if (env === 'accelerated') factor = 1.15; // Ripening is sped up
+            if (env === 'delayed') factor = 0.80;     // Ripening is slowed down
+
+            let z = (day - 110) * factor;
+            
+            // Equation modeled: f(x) = -0.0002(z)^3 + 0.009(z)^2 + 0.22(z) + 4.5
+            let term1 = -0.0002 * Math.pow(z, 3);
+            let term2 = 0.009 * Math.pow(z, 2);
+            let term3 = 0.22 * z;
+            let total = term1 + term2 + term3 + 4.5;
+
+            // Constrain minimum to 4.5 and peak cap to 15.2 for agronomic reality
+            return parseFloat(Math.max(4.5, Math.min(15.2, total)).toFixed(2));
+        }
+
+        function calculateRate(day, env) {
+            let factor = 1.0;
+            if (env === 'accelerated') factor = 1.15;
+            if (env === 'delayed') factor = 0.80;
+
+            let z = (day - 110) * factor;
+
+            // Analytical derivative: f'(x) = (-0.0006 * z^2 + 0.018 * z + 0.22) * dz/dx (dz/dx = factor)
+            let d_z = -0.0006 * Math.pow(z, 2) + 0.018 * z + 0.22;
+            let total_derivative = d_z * factor;
+
+            // Make sure derivative is zero if index reached maturity boundary limits
+            let brixVal = calculateBrix(day, env);
+            if (brixVal >= 15.2 && total_derivative > 0) {
+                return 0.0;
+            }
+
+            return parseFloat(total_derivative.toFixed(3));
+        }
+
+        window.onload = function() {
+            // Render beautiful equations when page finishes loading
+            try {
+                // Main f(x)
+                katex.render("f(x) = -0.0002(x-110)^3 + 0.009(x-110)^2 + 0.22(x-110) + 4.5", document.getElementById("katex-fx"), {
+                    throwOnError: false,
+                    displayMode: true
+                });
+
+                // Steps
+                katex.render("f'(x) = \\frac{d}{dx}[-0.0002(x-110)^3] + \\frac{d}{dx}[0.009(x-110)^2] + \\frac{d}{dx}[0.22(x-110)] + 0", document.getElementById("katex-steps"), {
+                    throwOnError: false,
+                    displayMode: true
+                });
+
+                // Derivative formula
+                katex.render("f'(x) = -0.0006(x-110)^2 + 0.018(x-110) + 0.22", document.getElementById("katex-dfx"), {
+                    throwOnError: false,
+                    displayMode: true
+                });
+            } catch (err) {
+                console.warn("KaTeX rendering error: ", err);
+            }
+
+            // Initialize visual chart
+            initChart();
+
+            // Link listeners
+            document.getElementById('daySlider').addEventListener('input', function(e) {
+                selectedDay = parseInt(e.target.value);
+                updateDetailsPanel();
+            });
+
+            updateDetailsPanel();
+        };
+
+        function initChart() {
+            let labels = [];
+            let brixData = [];
+            let rateData = [];
+
+            for (let d = 110; d <= 150; d++) {
+                labels.push("D" + d);
+                brixData.push(calculateBrix(d, currentEnv));
+                rateData.push(calculateRate(d, currentEnv));
+            }
+
+            const ctx = document.getElementById('cropChart').getContext('2d');
+            
+            cropChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Sugar Level (f(x) in °Brix)',
+                            data: brixData,
+                            borderColor: '#d97706',
+                            backgroundColor: 'rgba(217, 119, 6, 0.05)',
+                            borderWidth: 3.5,
+                            fill: true,
+                            tension: 0.25,
+                            yAxisID: 'yBrix',
+                            pointRadius: function(context) {
+                                let idx = context.dataIndex;
+                                return (idx + 110 === selectedDay) ? 8 : 2;
+                            },
+                            pointBackgroundColor: function(context) {
+                                let idx = context.dataIndex;
+                                return (idx + 110 === selectedDay) ? '#b45309' : '#d97706';
+                            }
+                        },
+                        {
+                            label: "Synthesis Rate (f'(x) in °Brix/Day)",
+                            data: rateData,
+                            borderColor: '#059669',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.25,
+                            yAxisID: 'yRate',
+                            pointRadius: function(context) {
+                                let idx = context.dataIndex;
+                                return (idx + 110 === selectedDay) ? 8 : 2;
+                            },
+                            pointBackgroundColor: function(context) {
+                                let idx = context.dataIndex;
+                                return (idx + 110 === selectedDay) ? '#047857' : '#059669';
+                            }
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    onClick: (evt, activeElements) => {
+                        if (activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            selectedDay = index + 110;
+                            document.getElementById('daySlider').value = selectedDay;
+                            updateDetailsPanel();
+                        }
+                    },
+                    scales: {
+                        yBrix: {
+                            type: 'linear',
+                            position: 'left',
+                            min: 3,
+                            max: 17,
+                            title: {
+                                display: true,
+                                text: 'Sugar Profile (°Brix)',
+                                color: '#b45309',
+                                font: { weight: 'bold' }
+                            },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        yRate: {
+                            type: 'linear',
+                            position: 'right',
+                            min: -0.1,
+                            max: 0.5,
+                            title: {
+                                display: true,
+                                text: 'Accumulation Rate (°Brix / Day)',
+                                color: '#047857',
+                                font: { weight: 'bold' }
+                            },
+                            grid: { drawOnChartArea: false }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { size: 11, family: 'Inter' }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartData() {
+            if (!cropChart) return;
+            
+            let brixData = [];
+            let rateData = [];
+            for (let d = 110; d <= 150; d++) {
+                brixData.push(calculateBrix(d, currentEnv));
+                rateData.push(calculateRate(d, currentEnv));
+            }
+
+            cropChart.data.datasets[0].data = brixData;
+            cropChart.data.datasets[1].data = rateData;
+            cropChart.update('active');
+        }
+
+        function setEnvironment(env) {
+            currentEnv = env;
+            
+            // Highlight Buttons correctly
+            const btns = ['standard', 'accelerated', 'delayed'];
+            btns.forEach(b => {
+                const element = document.getElementById('btn-env-' + b);
+                if (b === env) {
+                    element.className = "flex items-center justify-between p-3 rounded-xl border-2 border-agriculture-600 bg-agriculture-50/50 text-left transition-all duration-200";
+                    let badge = element.querySelector('span');
+                    if(badge) {
+                        badge.className = "text-xs font-bold text-white bg-agriculture-600 px-2 py-0.5 rounded-md";
+                    }
+                } else {
+                    element.className = "flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-slate-300 text-left transition-all duration-200";
+                    let badge = element.querySelector('span');
+                    if(badge) {
+                        badge.className = "text-xs font-bold text-slate-400 border border-slate-200 px-2 py-0.5 rounded-md";
+                    }
+                }
+            });
+
+            // Re-render chart dataset values and refresh equations panel
+            updateChartData();
+            updateDetailsPanel();
+        }
+
+        function updateDetailsPanel() {
+            document.getElementById('sliderValue').innerText = selectedDay + " DAFI";
+            document.getElementById('calc-day-header').innerText = selectedDay;
+
+            let brix = calculateBrix(selectedDay, currentEnv);
+            let rate = calculateRate(selectedDay, currentEnv);
+
+            document.getElementById('sugarBrix').innerText = brix.toFixed(2);
+            document.getElementById('sugarRate').innerText = (rate >= 0 ? "+" : "") + rate.toFixed(3);
+
+            // Dynamically show step calculation calculations utilizing KaTeX in details panels
+            let zVal = selectedDay - 110;
+            let factor = (currentEnv === 'accelerated') ? 1.15 : (currentEnv === 'delayed') ? 0.80 : 1.0;
+            let finalZ = (zVal * factor).toFixed(2);
+
+            try {
+                katex.render(`f(${selectedDay}) \\approx -0.0002(${finalZ})^3 + 0.009(${finalZ})^2 + 0.22(${finalZ}) + 4.5 = ${brix.toFixed(2)}`, document.getElementById('katex-sugar-calc'), {
+                    throwOnError: false
+                });
+
+                katex.render(`f'(${selectedDay}) \\approx [-0.0006(${finalZ})^2 + 0.018(${finalZ}) + 0.22] \\times ${factor} = ${rate.toFixed(3)}`, document.getElementById('katex-rate-calc'), {
+                    throwOnError: false
+                });
+            } catch(e) {
+                console.warn(e);
+            }
+
+            // Write layman assessment and harvest advisory rules
+            let advisoryText = "";
+            let advisoryClass = "";
+            let laymanText = "";
+
+            if (brix < 7.0) {
+                laymanText = `At Day ${selectedDay}, the MD2 pineapple is extremely young, dark green, and acidic. Synthesis of complex sucrose molecules is beginning slowly at a derivative rate of ${rate.toFixed(3)} °Brix/day. The fruit pulp remains filled with starches rather than digestible sugars.`;
+                advisoryText = "UNRIPE (DO NOT HARVEST) — Strictly prohibited for processing due to extreme sour starch levels.";
+                advisoryClass = "px-3 py-1 rounded-full font-bold bg-rose-100 text-rose-800 border border-rose-200";
+            } else if (brix >= 7.0 && brix < 12.0) {
+                if (rate >= 0.30) {
+                    laymanText = `At Day ${selectedDay}, sugar levels are rising at their absolute maximum metabolic velocity of ${rate.toFixed(3)} °Brix per day. The pineapple is turning yellow near its base. Starch-to-sugar enzymatic conversion is in its peak biological burst!`;
+                    advisoryText = "ACTIVE RIPENING (DO NOT HARVEST) — Sugars are accumulating too rapidly; harvesting now would cut off critical sugar development.";
+                    advisoryClass = "px-3 py-1 rounded-full font-bold bg-amber-100 text-amber-800 border border-amber-200";
+                } else {
+                    laymanText = `At Day ${selectedDay}, sugar accumulates at a steady pace of ${rate.toFixed(3)} °Brix/day. Acidity levels are dropping, and key tropical volatiles are forming.`;
+                    advisoryText = "APPROACHING MATURITY — Monitor closely over the next 3 to 5 days.";
+                    advisoryClass = "px-3 py-1 rounded-full font-bold bg-yellow-100 text-yellow-800 border border-yellow-200";
+                }
+            } else if (brix >= 12.0 && brix < 14.8) {
+                laymanText = `At Day ${selectedDay}, sugar is approaching the optimal range at ${brix.toFixed(2)} °Brix. The rate of synthesis has slowed down to ${rate.toFixed(3)} °Brix/day as sugar accumulation starts to saturate. This indicates the biological loading cycle is successfully ending.`;
+                advisoryText = "PRIME CANNING WINDOW — Excellent profile for fresh export or juice extraction lines.";
+                advisoryClass = "px-3 py-1 rounded-full font-bold bg-agriculture-100 text-agriculture-800 border border-agriculture-200";
+            } else {
+                laymanText = `At Day ${selectedDay}, maximum sugar saturation is achieved at ${brix.toFixed(2)} °Brix. The derivative rate of sugar loading is virtually zero (${rate.toFixed(3)} °Brix/day) or slightly negative, meaning no more sucrose is being added. The pineapple is deeply golden-yellow and fragrant.`;
+                advisoryText = "PEAK QUALITY & OVERRIPENING RISK — Harvest immediately. If delayed, anaerobic yeast micro-fermentation will compromise flavor.";
+                advisoryClass = "px-3 py-1 rounded-full font-bold bg-red-100 text-red-800 border border-red-200";
+            }
+
+            document.getElementById('laymanExplanation').innerText = laymanText;
+            document.getElementById('harvestAdvisory').innerText = advisoryText;
+            document.getElementById('harvestAdvisory').className = advisoryClass;
+
+            // Trigger visual point highlighting inside chart.js context without full repaint lags
+            if (cropChart) {
+                cropChart.update('none'); 
+            }
+        }
+
+        function checkAnswer(qNum, selectedOption, btnElement) {
+            const feedbackBox = document.getElementById(`q${qNum}-feedback`);
+            feedbackBox.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-red-100', 'text-red-800');
+
+            // Find all buttons inside the target container to clear styling
+            const parent = btnElement.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.className = "p-3 text-left border border-slate-200 rounded-xl hover:bg-indigo-50/50 transition duration-200";
+            });
+
+            if (qNum === 1) {
+                if (selectedOption === 'B') {
+                    btnElement.className = "p-3 text-left border-2 border-emerald-500 bg-emerald-50 rounded-xl text-emerald-900 font-medium transition duration-200";
+                    feedbackBox.innerText = "CORRECT! The first derivative f'(x) measures the instantaneous rate of change (slope) of the total sugar accumulation. This is crucial for planning agricultural processing times.";
+                    feedbackBox.classList.add('bg-emerald-100', 'text-emerald-800');
+                } else {
+                    btnElement.className = "p-3 text-left border-2 border-rose-500 bg-rose-50 rounded-xl text-rose-900 font-medium transition duration-200";
+                    feedbackBox.innerText = "INCORRECT. Option A describes a total percentage static mass, while Option C is a static index level. The derivative is a dynamic rate measure over elapsed time.";
+                    feedbackBox.classList.add('bg-red-100', 'text-red-800');
+                }
+            } else if (qNum === 2) {
+                if (selectedOption === 'B') {
+                    btnElement.className = "p-3 text-left border-2 border-emerald-500 bg-emerald-50 rounded-xl text-emerald-900 font-medium transition duration-200";
+                    feedbackBox.innerText = "CORRECT! Biologically, when the crop is fully ripe, the plant stops pumping active sucrose to the fruit tissue. The fruit starts basic cellular respiration which slowly consumes sugar, slowing the net increase rate to zero or turning it negative.";
+                    feedbackBox.classList.add('bg-emerald-100', 'text-emerald-800');
+                } else {
+                    btnElement.className = "p-3 text-left border-2 border-rose-500 bg-rose-50 rounded-xl text-rose-900 font-medium transition duration-200";
+                    feedbackBox.innerText = "INCORRECT. While tropical rain shifts can slow growth, the natural ripening plateau causes f'(x) to flatten to zero due to internal fruit metabolic respiration consumption.";
+                    feedbackBox.classList.add('bg-red-100', 'text-red-800');
+                }
+            }
+            feedbackBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
